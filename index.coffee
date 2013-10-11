@@ -3,7 +3,7 @@ async = require 'async'
 webdriverjs = require 'webdriverjs'
 program = require 'commander'
 
-program.version '0.0.1'
+program.version require('./package.json').version
 program.option '-I, --banking-id <ID>', 'Internet banking ID'
 program.option '-p, --banking-password <password>', 'Internet banking password'
 program.parse process.argv
