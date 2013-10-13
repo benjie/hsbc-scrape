@@ -64,6 +64,8 @@ repl = ->
     mainMenu()
 
 mainMenu = ->
+  accountList = null
+  chosenAccount = null
   async.series
     loadMyAccountsPage: (next) ->
       console.log "Loading my accounts..."
@@ -75,7 +77,24 @@ mainMenu = ->
           console.error err
           return next err
         console.log list
+        accountList = list
         next()
+    chooseAccount: (next) ->
+      console.log "Which account would you like to look at?"
+      options = ("#{account.name} (#{account.details})" for account in accountList)
+      program.choose options, (i) ->
+        process.stdin.pause()
+        chosenAccount = accountList[i]
+        next()
+    openAccount: (next) ->
+      javascript = "document.getElementById(#{JSON.stringify(chosenAccount.formId)}).submit();"
+      runJs javascript, (err) ->
+        return next err if err?
+        next()
+    waitABit: (next) ->
+      delay 3000, next
+    goToPreviousStatements: (next) ->
+      client.url "https://www.hsbc.co.uk/1/3/personal/internet-banking/previous-statements", next
   , (err) ->
     return handleError err if err
 
