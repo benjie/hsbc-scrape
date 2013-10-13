@@ -1,5 +1,6 @@
 async = require 'async'
 {program, client, delay, handleError, runJsFile, runJs, exit} = require './common'
+PreviousStatementsDownloader = require './previous-statements-downloader'
 
 # For if you're using the REPL
 myRepl = null
@@ -53,14 +54,9 @@ mainMenu = ->
         next()
     waitABit: (next) ->
       delay 3000, next
-    goToPreviousStatements: (next) ->
-      client.url "https://www.hsbc.co.uk/1/3/personal/internet-banking/previous-statements", next
-    getListOfPreviousStatements: (next) ->
-      runJsFile 'statementlist', (err, list) ->
-        return next err if err
-        console.log "Here's the list of statements:"
-        console.log list
-        next()
+    downloadAllPreviousStatements: (next) ->
+      downloader = new PreviousStatementsDownloader()
+      downloader.downloadAll next
   , (err) ->
     return handleError err if err
 
