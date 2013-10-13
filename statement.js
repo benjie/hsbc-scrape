@@ -60,6 +60,6 @@ $rows.each(function(){
   }
 });
 
-result.back = $(".hsbcButtonBack")[0].href
+result.back = $(".hsbcButtonBack:last")[0].href
 
 return result;
