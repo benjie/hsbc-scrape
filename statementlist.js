@@ -14,6 +14,11 @@ $statementList.find("td:first-child").each(function() {
   result.statements.push(rowDetails);
 });
 
-result.nextSet = $(".-arr")[0].href;
+try {
+  // There might not be a next set, this is perfectly valid.
+  result.nextSet = $(".-arr")[0].href;
+} catch (e) {
+  // Meh.
+}
 
 return result;
