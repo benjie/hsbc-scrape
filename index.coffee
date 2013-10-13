@@ -95,6 +95,12 @@ mainMenu = ->
       delay 3000, next
     goToPreviousStatements: (next) ->
       client.url "https://www.hsbc.co.uk/1/3/personal/internet-banking/previous-statements", next
+    getListOfPreviousStatements: (next) ->
+      runJsFile 'statementlist', (err, list) ->
+        return next err if err
+        console.log "Here's the list of statements:"
+        console.log list
+        next()
   , (err) ->
     return handleError err if err
 
