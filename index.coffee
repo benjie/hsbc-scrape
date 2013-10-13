@@ -38,8 +38,11 @@ echoDone = (err, result) ->
   else
     console.log "Done, result is in `lastResult` variable."
 
-runJs = (filename, callback) ->
+runJsFile = (filename, callback) ->
   javascript = fs.readFileSync("#{filename}.js").toString('utf8')
+  runJs javascript, callback
+
+runJs = (javascript, callback) ->
   client.execute javascript, [], (err, res) ->
     return callback err if err?
     return callback null, res.value
@@ -56,7 +59,7 @@ repl = ->
   # Vanilla JS REPL:
   myRepl = require('repl').start options
   # Export useful things
-  myRepl.context[key] = value for key, value of {client, delay, program, echoDone, runJs}
+  myRepl.context[key] = value for key, value of {client, delay, program, echoDone, runJs, runJsFile}
   myRepl.on 'exit', ->
     mainMenu()
 
@@ -67,8 +70,10 @@ mainMenu = ->
       client.url  "https://www.hsbc.co.uk/1/3/personal/internet-banking", next
     getListOfAccounts: (next) ->
       console.log "Parsing list of accounts"
-      runJs "accountlist", (err, list) ->
-        console.error err if err
+      runJsFile "accountlist", (err, list) ->
+        if err
+          console.error err
+          return next err
         console.log list
         next()
   , (err) ->
