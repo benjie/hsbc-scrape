@@ -2,6 +2,13 @@ async = require 'async'
 {program, client, delay, handleError, runJsFile, runJs, exit} = require './common'
 PreviousStatementsDownloader = require './previous-statements-downloader'
 
+process.on 'uncaughtException', (err) ->
+  console.error "Uncaught exception occurred!"
+  console.error "ERROR: #{err.message}"
+  console.error err.stack
+  console.error require('util').inspect err, {colors: true}
+  console.error "Exiting."
+
 # For if you're using the REPL
 myRepl = null
 echoDone = (err, result) ->
