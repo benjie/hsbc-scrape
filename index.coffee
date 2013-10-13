@@ -1,32 +1,5 @@
-fs = require 'fs'
-require 'colors'
 async = require 'async'
-webdriverjs = require 'webdriverjs'
-program = require 'commander'
-
-program.version require('./package.json').version
-program.option '-I, --banking-id <ID>', 'Internet banking ID'
-program.option '-p, --banking-password <password>', 'Internet banking password'
-program.parse process.argv
-
-delay = (ms, cb) -> setTimeout cb, ms
-
-console.log "Welcome to HSBC Scrape".green
-
-options = {
-  logLevel: 'silent'
-}
-client = webdriverjs.remote(options)
-client.init()
-
-outputError = (err) ->
-  console.error "#{"ERROR: ".bold}#{err.message}".red
-  console.error err.stack
-
-handleError = (err) ->
-  outputError(err)
-  delay 10000, ->
-    exit()
+{program, client, delay, handleError, runJsFile, runJs, exit} = require './common'
 
 # For if you're using the REPL
 myRepl = null
@@ -37,19 +10,6 @@ echoDone = (err, result) ->
     outputError(err)
   else
     console.log "Done, result is in `lastResult` variable."
-
-runJsFile = (filename, callback) ->
-  javascript = fs.readFileSync("#{filename}.js").toString('utf8')
-  runJs javascript, callback
-
-runJs = (javascript, callback) ->
-  client.execute javascript, [], (err, res) ->
-    return callback err if err?
-    return callback null, res.value
-
-exit = ->
-  client.end()
-  console.log "Node #{"should".bold} exit very soon... But it mightn't, so Control-C is your backup plan."
 
 repl = ->
   options =
@@ -163,4 +123,5 @@ login = ->
     console.log "#{"Login successful".green}: transitioning to main menu."
     mainMenu()
 
+console.log "Welcome to HSBC Scrape".green
 login()
