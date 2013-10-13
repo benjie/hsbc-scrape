@@ -1,3 +1,11 @@
+function pennies(n) {
+  n = parseFloat(n);
+  if (isNaN(n)) {
+    n = 0;
+  }
+  return Math.round(n * 100);
+}
+
 var result = {};
 var $details = $(".extContentHighlightPib:first");
 result.accountName = $.trim($details.find(".hsbcAccountName").text());
@@ -8,6 +16,8 @@ result.date = $.trim($statement.find(".extPibRow:nth-of-type(1) .hsbcTextRight")
 result.rows = [];
 
 var $rows = $statement.find("table tbody tr");
+var first = true;
+var previousBalance = null;
 $rows.each(function(){
   var $row = $(this);
   var row = {}
@@ -23,7 +33,31 @@ $rows.each(function(){
       }
     }
   }
-  result.rows.push(row);
+
+  row.out = pennies(row.out);
+  row.in = pennies(row.in);
+  row.balance = pennies(row.balance);
+
+  if (row.type == '') {
+    if (first === true) {
+      result.openingBalance = row.balance;
+      previousBalance = result.openingBalance;
+      first = false;
+    } else if (first === false) {
+      result.closingBalance = row.balance;
+    } else {
+      throw new Error("Too many rows with no type?!");
+    }
+  } else {
+    if (!row.balance) {
+        row.balance = previousBalance + row.in - row.out;
+    }
+    if (row.balance != previousBalance + row.in - row.out) {
+      throw new Error("Doesn't add up... Previous balance "+previousBalance + " + " + row.in + " - " + row.out + " != " + row.balance);
+    }
+    result.rows.push(row);
+    previousBalance = row.balance;
+  }
 });
 
 result.back = $(".hsbcButtonBack")[0].href
