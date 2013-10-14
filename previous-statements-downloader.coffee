@@ -5,7 +5,7 @@ fs = require 'fs'
 # WARNING: saving/loading in this file is *synchronous*.
 
 class PreviousStatementsDownloader
-  filename: "#{__dirname}/statement.json"
+  constructor: (@filename) ->
 
   restore: ->
     console.log "Restoring progress..."

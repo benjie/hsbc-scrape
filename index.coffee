@@ -9,6 +9,10 @@ process.on 'uncaughtException', (err) ->
   console.error require('util').inspect err, {colors: true}
   console.error "Exiting."
 
+# Make string safe for filenames
+slug = (string) ->
+  return string.replace(/\s+/g, "-").replace(/[^A-Z0-9-]+/gi, "")
+
 # For if you're using the REPL
 myRepl = null
 echoDone = (err, result) ->
@@ -62,7 +66,7 @@ mainMenu = ->
     waitABit: (next) ->
       delay 3000, next
     downloadAllPreviousStatements: (next) ->
-      downloader = new PreviousStatementsDownloader()
+      downloader = new PreviousStatementsDownloader "#{__dirname}/statement-#{slug(chosenAccount.details)}.json"
       downloader.downloadAll next
   , (err) ->
     return handleError err if err
