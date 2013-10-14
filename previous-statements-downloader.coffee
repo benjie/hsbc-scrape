@@ -13,12 +13,11 @@ class PreviousStatementsDownloader
       jsonData = fs.readFileSync @filename, 'utf8'
       @statements = JSON.parse jsonData
     @statements ?= {}
-    console.log "... done (stub)"
+    console.log "... done"
     return
 
   save: ->
     fs.writeFileSync @filename, JSON.stringify(@statements, null, 2)
-    console.log "Saved to '#{@filename}'"
     return
 
   downloadAll: (callback) ->
@@ -106,7 +105,7 @@ class PreviousStatementsDownloader
           return next err if err?
           details = fetchedDetails
           row.details = details.description
-          console.log "Got details for transaction '#{row.description}': #{row.details}"
+          console.log "Got details for transaction '#{row.description}': #{row.details.replace(/\n/g, " | ")}"
           next()
 
       goBackToStatement: (next) ->
