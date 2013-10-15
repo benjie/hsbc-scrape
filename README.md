@@ -57,6 +57,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Running
 -------
 
+Install the dependencies:
+
+`npm install`
+
 Run selenium-standalone-server in one terminal, then run `npm start` in
 another and follow the prompts.
 
