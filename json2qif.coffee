@@ -16,23 +16,38 @@ catch e
   console.error "Could not decode JSON"
   process.exit 3
 
+# Fix all the dates.
 statements = []
 for name, statement of json
-  statement.date = new Date(Date.parse(statement.date))
+  statement.date = new Date(Date.parse(statement.date)+1000*60*60*12)
+  for row in statement.rows
+    date = new Date(Date.parse("#{row.date} #{statement.date.getFullYear()}")+1000*60*60*12)
+    if +date > +statement.date + 1000 * 60 * 60 * 24 * 31
+      date.setFullYear(date.getFullYear()-1)
+    row.date = date
   statements.push statement
 
 statements.sort (a, b) -> a.date - b.date
 
-qif = "!Type:Bank\n"
+qif = "!Account\n"
+name = statements[0].accountName.replace(/\s+,/g, ",").replace(/\s+/g, " ")
+qif += "N#{name}\n"
+qif += "TBank\n"
+qif += "^\n"
+qif += "!Type:Bank\n"
+
+date = statements[0].rows[0].date
+qif += "D#{date.toISOString().substr(0,10)}"
+qif += "POpening Balance\n"
+qif += "T#{statements[0].openingBalance/100}\n"
+qif += "^\n"
 for statement in statements
   for row in statement.rows
     #console.log "+ #{row.in} - #{row.out} = #{row.balance}"
     desc = row.details ? row.description
     desc = desc.replace /\n/g, " | "
-    date = new Date(Date.parse("#{row.date} #{statement.date.getFullYear()}"))
-    if +date > +statement.date + 1000 * 60 * 60 * 24 * 31
-      date.setFullYear(date.getFullYear()-1)
-    qif += "D#{date.toISOString().substr(0,10)}\n"
+    desc = desc.replace /\s+/g, " "
+    qif += "D#{row.date.toISOString().substr(0,10)}\n"
     qif += "T#{(row.in - row.out)/100}\n"
     qif += "P#{desc}\n"
     qif += "^\n"
