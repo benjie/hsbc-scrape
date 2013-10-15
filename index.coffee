@@ -48,7 +48,6 @@ mainMenu = ->
         if err
           console.error err
           return next err
-        console.log list
         accountList = list
         next()
     chooseAccount: (next) ->
