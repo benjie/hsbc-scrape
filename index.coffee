@@ -23,7 +23,7 @@ echoDone = (err, result) ->
   else
     console.log "Done, result is in `lastResult` variable."
 
-repl = ->
+repl = (callback = mainMenu) ->
   options =
     prompt: "HSBCScrape REPL> "
     useGlobal: true
@@ -33,7 +33,7 @@ repl = ->
   # Export useful things
   myRepl.context[key] = value for key, value of {client, delay, program, echoDone, runJs, runJsFile}
   myRepl.on 'exit', ->
-    mainMenu()
+    callback()
 
 mainMenu = ->
   accountList = null
@@ -65,25 +65,31 @@ mainMenu = ->
         next()
     waitABit: (next) ->
       delay 3000, next
-    downloadAllPreviousStatements: (next) ->
-      downloader = new PreviousStatementsDownloader "#{__dirname}/statement-#{slug(chosenAccount.details)}.json"
-      downloader.downloadAll next
   , (err) ->
     return handleError err if err
 
-    console.log "What would you like to do now?"
-    options = [
-      'REPL'
-      'exit'
-    ]
-    program.choose options, (i) ->
-      process.stdin.pause()
-      switch options[i]
-        when 'REPL'
-          console.log "Switching to #{"REPL".bold} mode..."
-          repl()
-        else
-          console.log "Exiting..."
+    nowWhat = ->
+      console.log "What would you like to do now?"
+      options = [
+        'download'
+        'REPL'
+        'menu'
+        'exit'
+      ]
+      program.choose options, (i) ->
+        process.stdin.pause()
+        switch options[i]
+          when 'download'
+            downloader = new PreviousStatementsDownloader "#{__dirname}/statement-#{slug(chosenAccount.details)}.json"
+            downloader.downloadAll nowWhat
+          when 'REPL'
+            console.log "Switching to #{"REPL".bold} mode..."
+            repl nowWhat
+          when 'menu'
+            mainMenu()
+          else
+            console.log "Exiting..."
+    nowWhat()
 
 login = ->
   async.series
