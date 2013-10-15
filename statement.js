@@ -21,7 +21,7 @@ var previousBalance = null;
 $rows.each(function(){
   var $row = $(this);
   var row = {}
-  var fields = ['date', 'type', 'description', 'out', 'in', 'balance'];
+  var fields = ['date', 'type', 'description', 'out', 'in', 'balance', 'overdrawn'];
   for (var i = 0, l = fields.length; i < l; i++) {
     var field = fields[i];
     var $td = $row.find("td:nth-of-type("+(i+1)+")");
@@ -37,6 +37,9 @@ $rows.each(function(){
   row.out = pennies(row.out);
   row.in = pennies(row.in);
   row.balance = pennies(row.balance);
+  if (row.overdrawn == 'D') {
+    row.balance = -row.balance;
+  }
 
   if (row.type == '') {
     if (first === true) {
