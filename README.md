@@ -60,14 +60,23 @@ Running
 Run selenium-standalone-server in one terminal, then run `npm start` in
 another and follow the prompts.
 
+### Faster, less secure method
 
-To save time you can pass your internet banking
-ID/password as options:
+To save time you can pass your internet banking ID/password as options,
+but **beware** - doing so may save them to your shell history:
 
-`coffee index.coffee -I IB0000000000 -p "correct horse battery staple"`
+` ./node_modules/.bin/coffee index.coffee -I IB0000000000 -p "correct horse battery staple"`
+
+**PROTIP**: check out `HISTCONTROL` in `bash`, particularly
+`ignorespace` to not log commands that start with a space. Check out
+this [LinuxJournal article on HISTCONTROL][].
+
+Or if you use `zsh` then check out `setopt histignorespace`.
 
 Bugs
 ----
 
 Pull requests welcome, please keep them focussed and tight - don't merge
 a whole load of new features and a rewrite into one pull request!
+
+[LinuxJournal article on HISTCONTROL]: http://www.linuxjournal.com/content/using-bash-history-more-efficiently-histcontrol
