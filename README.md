@@ -57,11 +57,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Running
 -------
 
-Run selenium, then
+Run selenium-standalone-server in one terminal, then run `npm start` in
+another and follow the prompts.
 
-`coffee index.coffee`
 
-Follow the prompts. To save time you can pass your internet banking
+To save time you can pass your internet banking
 ID/password as options:
 
 `coffee index.coffee -I IB0000000000 -p "correct horse battery staple"`
