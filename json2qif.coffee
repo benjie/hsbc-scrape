@@ -1,4 +1,6 @@
 fs = require 'fs'
+try
+  categorizer = require './categorizer'
 
 jsonFile = process.argv[2]
 
@@ -40,16 +42,25 @@ date = statements[0].rows[0].date
 qif += "D#{date.toISOString().substr(0,10)}"
 qif += "POpening Balance\n"
 qif += "T#{statements[0].openingBalance/100}\n"
+qif += "CR\n"
 qif += "^\n"
 for statement in statements
   for row in statement.rows
     #console.log "+ #{row.in} - #{row.out} = #{row.balance}"
-    desc = row.details ? row.description
-    desc = desc.replace /\n/g, " | "
-    desc = desc.replace /\s+/g, " "
+    notes = row.details ? ""
+    notes = notes.replace row.description, ""
+    notes = notes.replace /(^\s+|\s+$)/g, ""
+    notes = notes.replace /\n/g, " | "
+    notes = notes.replace /\s+/g, " "
+    row.notes = notes
     qif += "D#{row.date.toISOString().substr(0,10)}\n"
     qif += "T#{(row.in - row.out)/100}\n"
-    qif += "P#{desc}\n"
+    qif += "P#{row.description}\n"
+    qif += "M#{row.notes}\n"
+    category = categorizer?.categorize(row)
+    if category
+      qif += "L#{category}\n"
+    qif += "CR\n"
     qif += "^\n"
 
 fs.writeFileSync "#{jsonFile.replace(/.json$/, "")}.qif", qif
