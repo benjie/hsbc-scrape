@@ -18,6 +18,11 @@ catch e
   console.error "Could not decode JSON"
   process.exit 3
 
+# Delete empty statements
+for name, statement of json
+  if statement.rows.length is 0
+    delete json[name]
+
 # Fix all the dates.
 statements = []
 for name, statement of json
