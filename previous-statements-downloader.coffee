@@ -36,7 +36,9 @@ class PreviousStatementsDownloader
 
       # Find incomplete statements
       for statement in list.statements
+        console.log "    Analysing #{statement.title}"
         if !@statements[statement.title]?.complete
+          console.log "      -> Incomplete!"
           return @loadStatement statement
       # Must have completed the page!
       if list.nextSet?
