@@ -27,7 +27,16 @@ handleError = (err) ->
 
 runJsFile = (filename, callback) ->
   javascript = fs.readFileSync("#{filename}.js").toString('utf8')
-  runJs javascript, callback
+  attempts = 0
+  doIt = ->
+    attempts++
+    runJs javascript, (e) ->
+      if e and attempts < 3
+        console.error("Running JS failed; trying again (#{attempt+1}/3)")
+        setTimeout(doIt, attempts * attempts * 250)
+      else
+        callback.apply this, arguments
+  doIt()
 
 runJs = (javascript, callback) ->
   client.execute javascript, [], (err, res) ->
