@@ -36,6 +36,8 @@ for name, statement of json
 
 statements.sort (a, b) -> a.date - b.date
 
+console.log "Opening: #{statements[0].openingBalance/100} Closing: #{statements[statements.length - 1].closingBalance/100}"
+
 qif = "!Account\n"
 name = statements[0].accountName.replace(/\s+,/g, ",").replace(/\s+/g, " ")
 qif += "N#{name}\n"
