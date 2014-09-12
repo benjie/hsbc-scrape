@@ -4,7 +4,7 @@ result.accountName = $.trim($details.find(".hsbcAccountName").text());
 result.accountNumber = $.trim($details.find(".hsbcAccountNumber").text());
 result.statements = [];
 
-$statementList = $(".extContentHighlightPib:last table")
+$statementList = $(".extContentHighlightPib:nth(1) table")
 $statementList.find("td:first-child").each(function() {
   var $row = $(this);
   var $link = $row.find("a")

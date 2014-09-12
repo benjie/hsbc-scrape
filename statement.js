@@ -11,7 +11,7 @@ var $details = $(".extContentHighlightPib:first");
 result.accountName = $.trim($details.find(".hsbcAccountName").text());
 result.accountNumber = $.trim($details.find(".hsbcAccountNumber").text());
 
-var $statement = $(".extContentHighlightPib:last");
+var $statement = $(".extContentHighlightPib:nth(1)");
 result.date = $.trim($statement.find(".extPibRow:nth-of-type(1) .hsbcTextRight").text());
 result.rows = [];
 
