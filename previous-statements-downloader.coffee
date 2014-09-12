@@ -23,7 +23,7 @@ class PreviousStatementsDownloader
   downloadAll: (callback) ->
     @callback = callback
     @restore()
-    client.url "https://www.hsbc.co.uk/1/3/personal/internet-banking/previous-statements", (err) =>
+    client.url "https://www.hsbc.co.uk/1/3/personal/online-banking/previous-statements", (err) =>
       return handleError err if err?
       @processVisibleStatements()
     return

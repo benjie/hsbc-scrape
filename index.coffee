@@ -41,7 +41,7 @@ mainMenu = ->
   async.series
     loadMyAccountsPage: (next) ->
       console.log "Loading my accounts..."
-      client.url  "https://www.hsbc.co.uk/1/3/personal/internet-banking", next
+      client.url  "https://www.hsbc.co.uk/1/3/personal/online-banking", next
     getListOfAccounts: (next) ->
       console.log "Parsing list of accounts"
       runJsFile "accountlist", (err, list) ->
