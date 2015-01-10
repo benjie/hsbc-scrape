@@ -31,6 +31,7 @@ class PreviousStatementsDownloader
   processVisibleStatements: ->
     runJsFile 'statementlist', (err, list) =>
       return handleError err if err?
+      return handleError new Error("No statements?!") unless list?.length > 0
       #list.accountName / accountNumber / statements / nextSet
       #statement.href / title
 
