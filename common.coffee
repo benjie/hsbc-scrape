@@ -32,7 +32,7 @@ runJsFile = (filename, callback) ->
     attempts++
     runJs javascript, (e) ->
       if e and attempts < 3
-        console.error("Running JS failed; trying again (#{attempt+1}/3)")
+        console.error("Running JS failed; trying again (#{attempts+1}/3)")
         setTimeout(doIt, attempts * attempts * 250)
       else
         callback.apply this, arguments
