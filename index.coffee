@@ -41,7 +41,7 @@ mainMenu = ->
   async.series
     loadMyAccountsPage: (next) ->
       console.log "Loading my accounts..."
-      client.url  "https://www.hsbc.co.uk/1/3/personal/online-banking", next
+      client.url  "https://www.saas.hsbc.co.uk/1/3/personal/online-banking", next
     getListOfAccounts: (next) ->
       console.log "Parsing list of accounts"
       runJsFile "accountlist", (err, list) ->
@@ -113,16 +113,16 @@ login = ->
         process.stdin.pause()
         next()
     fillOutPassword: (next) ->
-      client.setValue "#passwd", program.bankingPassword, next
+      client.setValue "#memorableAnswer", program.bankingPassword, next
     getSecurityCode: (next) ->
       program.prompt 'Security code (from dongle): ', (text) ->
         program.securityCode = text
         process.stdin.pause()
         next()
     fillOutSecurityCode: (next) ->
-      client.setValue "#secNumberInput", program.securityCode, next
+      client.setValue "#idv_OtpCredential", program.securityCode, next
     submitPasswordForm: (next) ->
-      client.submitForm "form.login-form-two", next
+      client.submitForm ".securityDetails form", next
     waitABit: (next) ->
       delay 3000, next
     checkSuccess: (next) ->
